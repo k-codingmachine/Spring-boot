@@ -13,7 +13,7 @@ public class Board extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)/*자동 증가(sequence)*/
-    private Long bon;
+    private Long bno;
     @Column(length = 500, nullable = false)
     private String title;
 

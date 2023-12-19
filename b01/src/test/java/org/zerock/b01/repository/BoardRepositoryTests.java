@@ -32,7 +32,7 @@ class BoardRepositoryTests {
                     .build();
 
             Board result = boardRepository.save(board);
-            log.info("BNO : " +result.getBon());
+            log.info("BNO : " +result.getBno());
         }
     }
 
@@ -78,7 +78,7 @@ class BoardRepositoryTests {
 
     @Test
     public void testPaging(){
-        Pageable pageable = PageRequest.of(1,10, Sort.by("bno").descending());
+        Pageable pageable = PageRequest.of(2,10, Sort.by("bon").descending());
 
         Page<Board> result = boardRepository.findAll(pageable);
 
@@ -86,6 +86,77 @@ class BoardRepositoryTests {
         log.info(result.getTotalPages());
 
         result.getContent().forEach(list -> log.info(list));
+    }
+
+    @Test
+    public void testWriter(){
+        boardRepository.findBoardByWriter("user1")
+                .forEach(list -> log.info(list));
+    }
+
+    @Test
+    public void testWriterAndTitle(){
+        boardRepository
+                .findByWriterAndTitle("user1", "title..1")
+                .forEach(list -> log.info(list));
+    }
+
+    @Test
+    public void testTitleLike(){
+        boardRepository
+                .findByTitleLike("%1%")
+                .forEach(list -> log.info(list));
+    }
+
+    @Test
+    public void testWriter2(){
+        boardRepository.findByWriter2("user1")
+                .forEach(list -> log.info(list));
+    }
+
+    @Test
+    public void testTitle2(){
+        boardRepository.findByTitle2("2")
+                .forEach(list -> log.info(list));
+    }
+
+    @Test
+    public void testKeyword(){
+        Pageable pageable =  PageRequest.of(1, 10, Sort.by("bno").descending());
+
+        Page<Board> result = boardRepository.findBykeyword("1", pageable);
+        log.info(result.getTotalElements());
+        log.info(result.getTotalPages());
+        result.getContent().forEach(board -> log.info(board));
+    }
+
+    @Test
+    public void testSearch1(){
+        Pageable pageable = PageRequest.of(0,10,Sort.by("bno").descending());
+
+        boardRepository.search1(pageable);
+    }
+
+    @Test
+    public void testSearchAll(){
+        String[] types = {"t", "c", "w"};
+
+        String keyword = "1";
+
+        Pageable pageable =
+        PageRequest.of(1, 10, Sort.by("bno").descending());
+
+        Page<Board> result = boardRepository.searchAll(types, keyword, pageable);
+
+        log.info("--------------------------------");
+        log.info(result.getTotalElements());
+        log.info(result.getTotalPages());
+        log.info(result.getSize());
+        log.info(result.getNumber());
+        log.info(result.hasPrevious());
+        log.info(result.hasNext());
+        log.info("--------------------------------");
+
     }
 
 }

@@ -23,7 +23,7 @@ public class Board extends BaseEntity{
     @Column(length = 50, nullable = false)
     private String writer;
 
-    public void change(String title, String content){
+    public void change(String title, String content){ // 두가지만 변경 가능
         this.title = title;
         this.content = content;
     }

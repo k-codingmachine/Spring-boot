@@ -2,6 +2,8 @@ package org.zerock.b01.service;
 
 import org.zerock.b01.domain.Board;
 import org.zerock.b01.dto.BoardDTO;
+import org.zerock.b01.dto.PageRequestDTO;
+import org.zerock.b01.dto.PageResponseDTO;
 
 public interface BoardService {
 
@@ -11,6 +13,12 @@ public interface BoardService {
     BoardDTO readOne(Long bno);
 
 
+    void modify(BoardDTO boardDTO);
+
+
+    void remove(Long bno);
+
+    PageResponseDTO<BoardDTO> list(PageRequestDTO pageRequestDTO);
 
    default Board boardDTOTOEntity(BoardDTO boardDTO){ //default는 구현클래스에서 오버라이딩해도 되고 안해도된다.
        Board board = Board.builder()

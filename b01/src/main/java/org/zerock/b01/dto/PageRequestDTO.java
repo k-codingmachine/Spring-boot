@@ -48,8 +48,8 @@ public class PageRequestDTO extends BaseEntity {
         if(link == null){
             StringBuilder builder = new StringBuilder();
 
-            builder.append("page = " + this.page);
-            builder.append("$size = " + this.size);
+            builder.append("page=" + this.page);
+            builder.append("&size=" + this.size);
 
             if(type != null && type.isEmpty()){
                 builder.append("&type=" + type);
@@ -68,5 +68,4 @@ public class PageRequestDTO extends BaseEntity {
 
         return link;
     }
-
 }

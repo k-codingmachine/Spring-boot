@@ -16,7 +16,7 @@ class BoardServiceTests {
     private BoardService boardService;
 
     @Test
-    public void testRegister(){
+    public void testRegister() {
         BoardDTO boardDTO = BoardDTO.builder()
                 .title("테슽흐 제목")
                 .content("테슽흐 내용")
@@ -28,25 +28,24 @@ class BoardServiceTests {
     }
 
     @Test
-    public void testReadOne(){
+    public void testReadOne() {
         BoardDTO boardDTO = boardService.readOne(102L);
-
-        log.info("boardDTO >> " + boardDTO);
+        log.info("boardDTO =====>" + boardDTO);
     }
 
     @Test
-    public void testModify(){
+    public void testModify() {
         BoardDTO boardDTO = BoardDTO.builder()
-                .bno(101L)
+                .bno(102L)
                 .title("수정 제목")
-                .content("수정했다")
+                .content("수정 내용")
                 .build();
 
         boardService.modify(boardDTO);
     }
 
     @Test
-    public void testDelete(){
+    public void testDelete() {
         boardService.remove(103L);
     }
 

@@ -1,10 +1,12 @@
 buildscript {
+
     ext {
+
         queryDslVersion = "5.0.0"
+
     }
 
 }
-
 
 plugins {
     id 'java'
@@ -40,34 +42,38 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
+
     testCompileOnly 'org.projectlombok:lombok'
     testAnnotationProcessor 'org.projectlombok:lombok'
 
+
     // https://mvnrepository.com/artifact/nz.net.ultraq.thymeleaf/thymeleaf-layout-dialect
-    implementation 'nz.net.ultraq.thymeleaf', name: 'thymeleaf-layout-dialect' //버젼없어도 최적화버젼으로 가져옴
+    implementation group: 'nz.net.ultraq.thymeleaf', name: 'thymeleaf-layout-dialect'
 
     // https://mvnrepository.com/artifact/org.modelmapper/modelmapper
     implementation group: 'org.modelmapper', name: 'modelmapper', version: '3.1.1'
 
     // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-validation
-    implementation 'org.springframework.boot', name: 'spring-boot-starter-validation' //버젼없어도 최적화버젼으로 가져옴
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-validation'
+
+
+    // https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-ui
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
+
 
 
 
     implementation "com.querydsl:querydsl-jpa:${queryDslVersion}:jakarta"
 
-
     annotationProcessor(
             "jakarta.persistence:jakarta.persistence-api",
             "jakarta.annotation:jakarta.annotation-api",
-            "com.querydsl:querydsl-apt:${queryDslVersion}:jakarta")
+            "com.querydsl:querydsl-apt:${queryDslVersion}:jakarta"
+    )
 
 }
 
-
-
-
-tasks.named('test') {
+tasks.named('test') { Task it ->
     useJUnitPlatform()
 }
 

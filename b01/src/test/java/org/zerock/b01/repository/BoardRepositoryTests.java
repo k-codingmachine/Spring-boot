@@ -9,6 +9,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.zerock.b01.domain.Board;
+import org.zerock.b01.dto.BoardListReplyCountDTO;
 
 import java.util.List;
 import java.util.Optional;
@@ -124,7 +125,7 @@ class BoardRepositoryTests {
     public void testKeyword(){
         Pageable pageable =  PageRequest.of(1, 10, Sort.by("bno").descending());
 
-        Page<Board> result = boardRepository.findBykeyword("1", pageable);
+        Page<Board> result = boardRepository.findByKeyword("1", pageable);
         log.info(result.getTotalElements());
         log.info(result.getTotalPages());
         result.getContent().forEach(board -> log.info(board));
@@ -144,7 +145,7 @@ class BoardRepositoryTests {
         String keyword = "1";
 
         Pageable pageable =
-        PageRequest.of(1, 10, Sort.by("bno").descending());
+                PageRequest.of(1, 10, Sort.by("bno").descending());
 
         Page<Board> result = boardRepository.searchAll(types, keyword, pageable);
 
@@ -158,5 +159,35 @@ class BoardRepositoryTests {
         log.info("--------------------------------");
 
     }
+
+    @Test
+    public void testSearchReplyCount(){
+
+        String[] types = {"t", "C", "W"};
+
+        String keyword = "1";
+
+        Pageable pageable =
+        PageRequest.of(0, 10,
+                Sort.by("bno").descending());
+
+    Page<BoardListReplyCountDTO> result =
+        boardRepository.searchWithReplyCount(types, keyword, pageable);
+
+    log.info(result.getTotalElements());
+    log.info(result.getTotalPages());
+    log.info(result.getSize());
+    log.info(result.getNumber());
+    log.info("Next : " + result.hasNext());
+    log.info("Prev : " + result.hasPrevious());
+
+    result.getContent().forEach(log::info);
+    }
+
+
+
+
+
+
 
 }

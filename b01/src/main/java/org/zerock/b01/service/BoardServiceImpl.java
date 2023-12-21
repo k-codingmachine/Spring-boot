@@ -8,13 +8,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.zerock.b01.domain.Board;
 import org.zerock.b01.dto.BoardDTO;
+import org.zerock.b01.dto.BoardListReplyCountDTO;
 import org.zerock.b01.dto.PageRequestDTO;
 import org.zerock.b01.dto.PageResponseDTO;
 import org.zerock.b01.repository.BoardRepository;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
 
 @Service
 @Log4j2
@@ -27,7 +27,6 @@ public class BoardServiceImpl implements BoardService{
 
     @Override
     public Long register(BoardDTO boardDTO) {
-
         Board board = modelMapper.map(boardDTO, Board.class);
 
         log.info(board);
@@ -44,18 +43,17 @@ public class BoardServiceImpl implements BoardService{
 //        Board board = result.orElseThrow();
 
         Board board = boardRepository.findById(bno).orElseThrow();
-
         BoardDTO boardDTO = modelMapper.map(board, BoardDTO.class);
 
         return boardDTO;
     }
 
     @Override
-    public void modify(BoardDTO boardDTO) {
+    public void modify(BoardDTO boardDTO){
 
         Board board = boardRepository.findById(boardDTO.getBno()).orElseThrow();
 
-        board.change(boardDTO.getTitle(), board.getContent());
+        board.change(boardDTO.getTitle(), boardDTO.getContent());
 
         boardRepository.save(board);
     }
@@ -67,19 +65,15 @@ public class BoardServiceImpl implements BoardService{
 
     @Override
     public PageResponseDTO<BoardDTO> list(PageRequestDTO pageRequestDTO) {
-
-        String[] types = pageRequestDTO.getTypes(); // tcw ==> t c w
+        String[] types = pageRequestDTO.getTypes();     //tcw ===> t c w
         String keyword = pageRequestDTO.getKeyword();
 
         Pageable pageable = pageRequestDTO.getPageable("bno");
 
         Page<Board> result = boardRepository.searchAll(types, keyword, pageable);
 
-//        result.getTotalElements();
-//        result.getTotalPages();
-//        result.getContent().forEach(board -> log.info(board));
-
-        List<BoardDTO> dtoList = result.getContent().stream().map(board -> modelMapper.map(board, BoardDTO.class))
+        List<BoardDTO> dtoList = result.getContent().stream()
+                .map(board -> modelMapper.map(board,BoardDTO.class))
                 .collect(Collectors.toList());
 
         return PageResponseDTO.<BoardDTO>withAll()
@@ -89,28 +83,46 @@ public class BoardServiceImpl implements BoardService{
                 .build();
     }
 
+    @Override
+    public PageResponseDTO<BoardListReplyCountDTO> listWithReplyCount(PageRequestDTO pageRequestDTO) {
+        String[] types = pageRequestDTO.getTypes();     //tcw ===> t c w
+        String keyword = pageRequestDTO.getKeyword();
+        Pageable pageable = pageRequestDTO.getPageable("bno");
 
-//    @Override
-//    public Long register(BoardDTO boardDTO) {
-//
-//        Board board = boardDTOTOEntity(boardDTO);
-//
-//        log.info("register >> " +board);
-//        Long bno = boardRepository.save(board).getBno();
-//
-//        return bno;
-//    }
-//
-//    @Override
-//    public BoardDTO readOne(Long bno) {
-//
-//        Board board = boardRepository.findById(bno).orElseThrow();
-//
-////        BoardDTO boardDTO = entityToBoardDTO(board);
-//
-//
-//        return entityToBoardDTO(board);
-//    }
+        Page<BoardListReplyCountDTO> result = boardRepository.searchWithReplyCount(types, keyword, pageable);
+
+        return PageResponseDTO.<BoardListReplyCountDTO>withAll()
+                .pageRequestDTO(pageRequestDTO)
+                .dtoList(result.getContent())
+                .total((int)result.getTotalElements())
+                .build();
+    }
+
+
+
+
+
+
+   /* @Override
+    public Long register(BoardDTO boardDTO) {
+
+        Board board = boardDTOTOEntiy(boardDTO);
+
+        Long bno = boardRepository.save(board).getBno();
+
+        return bno;
+    }
+
+    @Override
+    public BoardDTO readOne(Long bno){
+
+        Board board = boardRepository.findById(bno).orElseThrow();
+
+//        BoardDTO boardDTO = entityToBoardDTO(board);
+
+        return entityToBoardDTO(board);
+    }*/
+
 
 
 }

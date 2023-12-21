@@ -1,15 +1,12 @@
 package org.zerock.b01.dto;
 
-
 import jakarta.persistence.Column;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
@@ -17,6 +14,7 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class BoardDTO {
 
     private Long bno;
@@ -34,6 +32,5 @@ public class BoardDTO {
     private LocalDateTime regDate;
 
     private LocalDateTime modDate;
-
 
 }

@@ -1,11 +1,7 @@
 buildscript {
-
     ext {
-
         queryDslVersion = "5.0.0"
-
     }
-
 }
 
 plugins {
@@ -42,13 +38,12 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
-
     testCompileOnly 'org.projectlombok:lombok'
     testAnnotationProcessor 'org.projectlombok:lombok'
 
-
     // https://mvnrepository.com/artifact/nz.net.ultraq.thymeleaf/thymeleaf-layout-dialect
     implementation group: 'nz.net.ultraq.thymeleaf', name: 'thymeleaf-layout-dialect'
+
 
     // https://mvnrepository.com/artifact/org.modelmapper/modelmapper
     implementation group: 'org.modelmapper', name: 'modelmapper', version: '3.1.1'
@@ -56,10 +51,7 @@ dependencies {
     // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-validation
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-validation'
 
-
-    // https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-ui
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
-
 
 
 
@@ -73,7 +65,8 @@ dependencies {
 
 }
 
-tasks.named('test') { Task it ->
+
+tasks.named('test') {
     useJUnitPlatform()
 }
 
@@ -84,4 +77,5 @@ sourceSets {
         }
     }
 }
+
 compileJava.dependsOn('clean')

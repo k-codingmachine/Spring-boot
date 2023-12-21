@@ -10,11 +10,9 @@ public interface BoardService {
 
     Long register(BoardDTO boardDTO);
 
-
     BoardDTO readOne(Long bno);
 
-
-    void modify(BoardDTO boardDTO);
+    void midify(BoardDTO boardDTO);
 
     void remove(Long bno);
 
@@ -22,19 +20,31 @@ public interface BoardService {
 
     PageResponseDTO<BoardListReplyCountDTO> listWithReplyCount(PageRequestDTO pageRequestDTO);
 
-    default Board boardDTOTOEntity(BoardDTO boardDTO){ //default는 구현클래스에서 오버라이딩해도 되고 안해도된다.
+
+
+
+
+
+
+
+
+
+
+
+
+    default  Board boardDTOTOEnity(BoardDTO boardDTO){
         Board board = Board.builder()
                 .title(boardDTO.getTitle())
                 .content(boardDTO.getContent())
                 .writer(boardDTO.getWriter())
                 .build();
-        return board;
+
+        return  board;
     }
 
+    default  BoardDTO entityToBoardDTO(Board board){
 
-    default BoardDTO entityToBoardDTO(Board board){
-
-        return  BoardDTO.builder()
+        return   BoardDTO.builder()
                 .bno(board.getBno())
                 .title(board.getTitle())
                 .content(board.getContent())
@@ -43,7 +53,11 @@ public interface BoardService {
                 .modDate(board.getModDate())
                 .build();
 
+
     }
+
+
+
 
 
 }

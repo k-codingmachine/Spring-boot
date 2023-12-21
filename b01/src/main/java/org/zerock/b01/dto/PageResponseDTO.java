@@ -14,13 +14,15 @@ public class PageResponseDTO<E> {
     private int size;
     private int total;
 
-    private int start;      //시작 페이지
-    private int end;        // 끝 페이지
+    private int start;  //시작 페이지
 
-    private boolean prev;   // 이전 버튼
-    private boolean next;   // 다음 버튼
+    private int end;  //끝 페이지
 
-    private List<E> dtoList;// 전체 데이터
+    private  boolean prev;
+
+    private boolean next;
+
+    private List<E> dtoList;
 
     @Builder(builderMethodName = "withAll")
     public PageResponseDTO(PageRequestDTO pageRequestDTO, List<E> dtoList, int total){
@@ -35,17 +37,17 @@ public class PageResponseDTO<E> {
         this.total = total;
         this.dtoList = dtoList;
 
-        this.end =   (int)(Math.ceil(this.page / 10.0 )) *  10; //페이지 값 계산
+        this.end =   (int)(Math.ceil(this.page / 10.0 )) *  10;
 
-        this.start = this.end - 9;      //시작 페이지 보여주겠다.
+        this.start = this.end - 9;
 
         int last =  (int)(Math.ceil((total/(double)size)));
 
         this.end =  end > last ? last: end;
 
-        this.prev = this.start > 1; //1보다 크면 이전 버튼 존재
+        this.prev = this.start > 1;
 
-        this.next =  total > this.end * this.size; //다음 버튼 추가하는 것
+        this.next =  total > this.end * this.size;
 
     }
 }

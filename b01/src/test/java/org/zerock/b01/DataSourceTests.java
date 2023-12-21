@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.TestComponent;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -22,10 +21,10 @@ public class DataSourceTests {
     @Test
     public void testConnection() throws SQLException{
 
-        @Cleanup // 테스트가 끝나면 db연결을 끊어버림
+        @Cleanup
         Connection con = dataSource.getConnection();
 
-        log.info(con);
+        log.info("con => " +con);
 
         Assertions.assertNotNull(con);
     }

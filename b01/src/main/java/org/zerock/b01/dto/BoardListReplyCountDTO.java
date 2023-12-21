@@ -14,5 +14,4 @@ public class BoardListReplyCountDTO {
 
     private Long replyCount;
 
-
 }

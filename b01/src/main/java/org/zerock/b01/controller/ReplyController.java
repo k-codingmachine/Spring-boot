@@ -4,8 +4,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
@@ -14,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.zerock.b01.dto.PageRequestDTO;
 import org.zerock.b01.dto.PageResponseDTO;
 import org.zerock.b01.dto.ReplyDTO;
-import org.zerock.b01.service.ReplyServcie;
+import org.zerock.b01.service.ReplyService;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,15 +20,16 @@ import java.util.Map;
 @RestController
 @RequestMapping("/replies")
 @Log4j2
-@RequiredArgsConstructor // final
+@RequiredArgsConstructor
 public class ReplyController {
 
-    private final ReplyServcie replyServcie;
+    private final ReplyService replyService;
 
-//    @Operation(summary = "Relies POST", description = "POST방식으로 댓글 등록")
-//    @PostMapping(value="/", consumes = MediaType.APPLICATION_JSON_VALUE)
-//    public ResponseEntity<Map<String, Long>> register(@Valid @RequestBody ReplyDTO replyDTO
-//                                                        ,BindingResult bindingResult) throws BindException{
+
+//    @Operation(summary = "Replies POST", description = "POST 방식으로로 댓글 등록")
+//    @PostMapping(value = "/", consumes = MediaType.APPLICATION_JSON_VALUE)
+//    public ResponseEntity<Map<String, Long>> register(@Valid @RequestBody ReplyDTO replyDTO,
+//                                                      BindingResult bindingResult) throws  BindException{
 //
 //        log.info(replyDTO);
 //
@@ -38,40 +37,79 @@ public class ReplyController {
 //            throw new BindException(bindingResult);
 //        }
 //
-//        Map<String, Long> resultMap = Map.of("rno", 108L);
+//        Map<String, Long> resultMap = Map.of("rno", 111L);
 //
 //        return ResponseEntity.ok(resultMap);
-//
 //    }
+
 
     @Operation(summary = "Replies POST", description = "POST 방식으로 댓글 등록")
     @PostMapping(value = "/", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public Map<String, Long> register(@Valid @RequestBody ReplyDTO replyDTO,
-                                      BindingResult bindingResult) throws  BindException{
-
+    public Map<String , Long> register(@Valid @RequestBody ReplyDTO replyDTO,
+                                       BindingResult bindingResult ) throws  BindException{
         log.info(replyDTO);
 
-        if (bindingResult.hasErrors()){
+        if(bindingResult.hasErrors()){
             throw  new BindException(bindingResult);
         }
-        Map<String, Long>resultMap = new HashMap<>();
-        Long rno = replyServcie.register(replyDTO);
+
+        Map<String , Long> resultMap = new HashMap<>();
+        Long rno = replyService.register(replyDTO);
 
         resultMap.put("rno", rno);
 
         return resultMap;
     }
-    @Operation(summary = "Replies POST", description = "POST 방식으로 댓글 등록")
+
+    @Operation(summary = "Replies of Board", description = "GET 방식으로 특정 게실물의 댓글 목록")
     @GetMapping(value = "/list/{bno}")
     public PageResponseDTO<ReplyDTO> getList(@PathVariable("bno") Long bno, PageRequestDTO pageRequestDTO){
-        return replyServcie.getListOfBoard(bno, pageRequestDTO);
+
+        return replyService.getListOfBoard(bno, pageRequestDTO);
+
     }
 
-    @Operation(summary = "Read Reply", description = "GET 방식으로 댓글 조회")
+
+    @Operation(summary = "Read Reply", description = "GET 방식으로 특정 댓글 조회")
     @GetMapping(value = "/{rno}")
     public ReplyDTO getReplyDTO(@PathVariable("rno") Long rno){
-        return replyServcie.read(rno);
+
+        return replyService.read(rno);
     }
+
+    @Operation(summary = "Delete Reply", description = "DELETE 방식으로 특정 댓글 삭제")
+    @DeleteMapping("/{rno}")
+    public Map<String, Long> remove(@PathVariable("rno") Long rno){
+
+        replyService.remove(rno);
+
+        Map<String, Long> resultMap = new HashMap<>();
+
+        resultMap.put("rno", rno);
+
+        return resultMap;
+    }
+
+    @Operation(summary = "Modify Reply", description = "PUT 방식으로 특정 댓글 수정")
+    @PutMapping(value = "/{rno}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public Map<String, Long> modify(@PathVariable("rno") Long rno,
+                                    @RequestBody ReplyDTO replyDTO) {
+
+        replyDTO.setRno(rno);
+
+        replyService.modify(replyDTO);
+
+        Map<String, Long> resultMap = new HashMap<>();
+
+        resultMap.put("rno", rno);
+
+        return resultMap;
+    }
+
+
+
+
+
 
 
 }

@@ -7,66 +7,66 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.zerock.b01.domain.BaseEntity;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.time.LocalDateTime;
 
 @Builder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class PageRequestDTO extends BaseEntity {
+public class PageRequestDTO {
 
     @Builder.Default
-    private  int page=1;
+   private  int page=1;
 
     @Builder.Default
-    private int size=10;
+   private int size=10;
 
-    private String type; //tcw
+   private String type; //tcw
 
-    private String keyword;
+   private String keyword;
 
-    public String[] getTypes(){ // tcw =>  t c w
-        if(type==null || type.isEmpty()){
-            return null;
-        }
+   public String[] getTypes(){ // tcw =>  t c w
+       if(type==null || type.isEmpty()){
+           return null;
+       }
 
-        return type.split("");
-    }
+       return type.split("");
+   }
 
-    public Pageable getPageable(String ...props){
-        return PageRequest.of(this.page-1, this.size, Sort.by(props).descending());
-    }
+   public Pageable getPageable(String ...props){
+       return PageRequest.of(this.page-1, this.size, Sort.by(props).descending());
+   }
 
 
-    private  String link;
+   private  String link;
 
-    public String getLink(){
+   public String getLink(){
 
-        if(link == null){
-            StringBuilder builder = new StringBuilder();
+       if(link == null){
+           StringBuilder builder = new StringBuilder();
 
-            builder.append("page=" + this.page);
-            builder.append("&size=" + this.size);
+           builder.append("page=" + this.page);
+           builder.append("&size=" + this.size);
 
-            if(type != null && type.isEmpty()){
-                builder.append("&type=" + type);
-            }
+           if(type != null && type.isEmpty()){
+               builder.append("&type=" + type);
+           }
 
-            if(keyword != null){
-                try {
-                    builder.append("&keyword=" + URLEncoder.encode(keyword, "utf-8"));
-                } catch (UnsupportedEncodingException e) {
-                    throw new RuntimeException(e);
-                }
-            }
+           if(keyword != null){
+               try {
+                   builder.append("&keyword=" + URLEncoder.encode(keyword, "utf-8"));
+               } catch (UnsupportedEncodingException e) {
+                   throw new RuntimeException(e);
+               }
+           }
 
-            link = builder.toString();  //page=1&size=10&type=tcw&keyword=1
-        }
+           link = builder.toString();  //page=1&size=10&type=tcw&keyword=1
+       }
 
         return link;
-    }
+   }
 
 }

@@ -65,7 +65,7 @@ public class BoardServiceImpl implements  BoardService{
 
         board.change(boardDTO.getTitle(), boardDTO.getContent());
 
-        //board.clearImages();
+        board.clearImages();
 
         if(boardDTO.getFileNames() != null){
             for(String fileName : boardDTO.getFileNames()){
@@ -126,30 +126,21 @@ public class BoardServiceImpl implements  BoardService{
 
     @Override
     public PageResponseDTO<BoardListAllDTO> listWithAll(PageRequestDTO pageRequestDTO) {
-        return null;
+
+        String[] types = pageRequestDTO.getTypes();  //tcw   ==> t c w
+        String keyword = pageRequestDTO.getKeyword();
+        Pageable pageable = pageRequestDTO.getPageable("bno");
+
+        Page<BoardListAllDTO> result = boardReposotory.searchWithAll(types, keyword, pageable);
+
+        return PageResponseDTO.<BoardListAllDTO>withAll()
+                .pageRequestDTO(pageRequestDTO)
+                .dtoList(result.getContent())
+                .total((int)result.getTotalElements())
+                .build();
     }
 
 
-//    @Override
-//    public Long register(BoardDTO boardDTO) {
-//
-//       Board board  = boardDTOTOEnity(boardDTO);
-//
-//       log.info("register ==> " + board);
-//       Long bno = boardReposotory.save(board).getBno();
-//
-//        return bno;
-//    }
-
-//    @Override
-//    public BoardDTO readOne(Long bno) {
-//
-//        Board board = boardReposotory.findById(bno).orElseThrow();
-//
-////        BoardDTO boardDTO  = entityToBoardDTO(board);
-//
-//        return entityToBoardDTO(board);
-//    }
 
 
 }

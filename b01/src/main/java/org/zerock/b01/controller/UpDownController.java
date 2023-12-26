@@ -90,25 +90,18 @@ public class UpDownController {
     @Operation(summary = "View 파일", description = "GET방식으로 첨부파일 조회")
     @GetMapping("/view/{fileName}")
     public ResponseEntity<Resource>  viewFileGET(@PathVariable("fileName") String fileName){
-        Resource resource = new FileSystemResource(uploadPath+File.separator +fileName);
-
-//        log.info("resource : " +  resource);
-
+        Resource resource = new FileSystemResource(uploadPath+File.separator + fileName);
         String resourceName = resource.getFilename();
-
-//        log.info("resourceName : " +  resourceName);
-
+        log.info(">>>>> " + resourceName);
         HttpHeaders headers = new HttpHeaders();
 
         try{
-            headers.add("Content-type", Files.probeContentType(resource.getFile().toPath()));
-
-//            log.info("content-type : " + Files.probeContentType(resource.getFile().toPath()));
-        }catch (Exception e){
-            return  ResponseEntity.internalServerError().build();
+            log.info(">>>>>>>> " +  resource.getFile().toPath());
+            headers.add("Content-Type", Files.probeContentType( resource.getFile().toPath() ));
+        } catch(Exception e){
+            return ResponseEntity.internalServerError().build();
         }
-
-        return  ResponseEntity.ok().headers(headers).body(resource);
+        return ResponseEntity.ok().headers(headers).body(resource);
     } // end viewFileGET
 
 

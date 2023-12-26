@@ -6,10 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import org.zerock.b01.dto.BoardDTO;
+import org.zerock.b01.dto.BoardListAllDTO;
 import org.zerock.b01.dto.PageRequestDTO;
 import org.zerock.b01.dto.PageResponseDTO;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -46,8 +48,8 @@ class BoardServiceTests {
         //변경에 필요한 데이터
         BoardDTO boardDTO = BoardDTO.builder()
                 .bno(1L)
-                .title("Updated....101")
-                .content("Updated content 101...")
+                .title("Updated....1")
+                .content("Updated content 1...")
                 .build();
 
         //첨부파일을 하나 추가
@@ -81,22 +83,24 @@ class BoardServiceTests {
     @Test
     public void testRegisterWithImages(){
 
-        BoardDTO boardDTO =  BoardDTO.builder()
-                .title("File.....Sample Title")
-                .content("Sample Content...")
-                .writer("user00")
-                .build();
+        for(int i=0; i<100; i++) {
+            BoardDTO boardDTO = BoardDTO.builder()
+                    .title("File.....Sample Title" +i)
+                    .content("Sample Content..." +i)
+                    .writer("user"+i)
+                    .build();
 
-        boardDTO.setFileNames(
-                Arrays.asList(
-                        UUID.randomUUID() + "_aaa.jpg",
-                        UUID.randomUUID() + "_bbb.jpg",
-                        UUID.randomUUID() + "_ccc.jpg"
-                )
-        );
+            boardDTO.setFileNames(
+                    Arrays.asList(
+                            UUID.randomUUID() + "_aaa"+i+".jpg",
+                            UUID.randomUUID() + "_bbb"+i+".jpg",
+                            UUID.randomUUID() + "_ccc"+i+".jpg"
+                    )
+            );
+            Long bno = boardService.register(boardDTO);
+        }
 
-        Long bno = boardService.register(boardDTO);
-        log.info("bno : " + bno);
+//        log.info("bno : " + bno);
 
     }
 
@@ -112,6 +116,33 @@ class BoardServiceTests {
         );
     }
 
+    @Test
+    public void testRemvoeAll(){
+
+        boardService.remove(2L);
+    }
+
+
+    @Test
+    public void testListWithAll(){
+        PageRequestDTO pageRequestDTO = PageRequestDTO.builder()
+                .page(1)
+                .size(10)
+                .build();
+
+        PageResponseDTO<BoardListAllDTO> responseDTO = boardService.listWithAll(pageRequestDTO);
+
+        List<BoardListAllDTO> dtoList = responseDTO.getDtoList();
+
+        dtoList.forEach(boardListAllDTO -> {
+            log.info(boardListAllDTO.getBno() + " : " + boardListAllDTO.getTitle() + " : " + boardListAllDTO.getReplyCount());
+
+            if(boardListAllDTO.getBoardImages() != null){
+                boardListAllDTO.getBoardImages().forEach(image -> log.info(image));
+            }
+            log.info("-------------------------------------------------------------------------");
+        });
+    }
 
 
 }

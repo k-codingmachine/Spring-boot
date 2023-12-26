@@ -6,11 +6,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.zerock.b01.domain.Board;
-import org.zerock.b01.dto.BoardDTO;
-import org.zerock.b01.dto.BoardListReplyCountDTO;
-import org.zerock.b01.dto.PageRequestDTO;
-import org.zerock.b01.dto.PageResponseDTO;
+import org.zerock.b01.dto.*;
 import org.zerock.b01.repository.BoardReposotory;
 
 import java.util.List;
@@ -20,6 +18,7 @@ import java.util.stream.Collectors;
 @Service
 @Log4j2
 @RequiredArgsConstructor
+@Transactional
 public class BoardServiceImpl implements  BoardService{
 
     private final BoardReposotory boardReposotory;
@@ -29,9 +28,9 @@ public class BoardServiceImpl implements  BoardService{
     @Override
     public Long register(BoardDTO boardDTO) {
 
-       Board board = modelMapper.map(boardDTO, Board.class);
+//       Board board = modelMapper.map(boardDTO, Board.class);
 
-       log.info(board);
+       Board board = dtoToEntity(boardDTO);
 
        Long bno = boardReposotory.save(board).getBno();
 
@@ -41,22 +40,39 @@ public class BoardServiceImpl implements  BoardService{
     @Override
     public BoardDTO readOne(Long bno) {
 
-//        Optional<Board> result = boardReposotory.findById(bno);
-//        Board board = result.orElseThrow();
+//        Board board = boardReposotory.findById(bno).orElseThrow();
 
-        Board board = boardReposotory.findById(bno).orElseThrow();
+        Board board = boardReposotory.findByIdWithImages(bno).orElseThrow();
 
-        BoardDTO boardDTO =modelMapper.map(board, BoardDTO.class);
+//        BoardDTO boardDTO = modelMapper.map(board, BoardDTO.class);
 
-        return boardDTO;
+        return entityToDTO(board);
     }
 
     @Override
     public void midify(BoardDTO boardDTO) {
 
-        Board board = boardReposotory.findById(boardDTO.getBno()).orElseThrow();
+
+        log.info("modify......................");
+//        Optional<Board> result = boardReposotory.findByIdWithImages(boardDTO.getBno());
+        Optional<Board> result = boardReposotory.findById(boardDTO.getBno());
+
+        log.info("result => " + result);
+
+        Board board = result.orElseThrow();
+
+        log.info("board => " + board);
 
         board.change(boardDTO.getTitle(), boardDTO.getContent());
+
+        //board.clearImages();
+
+        if(boardDTO.getFileNames() != null){
+            for(String fileName : boardDTO.getFileNames()){
+                String[] arr = fileName.split("_");
+                board.addImage(arr[0],arr[1]);
+            }
+        }
 
         boardReposotory.save(board);
     }
@@ -106,6 +122,11 @@ public class BoardServiceImpl implements  BoardService{
                 .dtoList(result.getContent())
                 .total((int)result.getTotalElements())
                 .build();
+    }
+
+    @Override
+    public PageResponseDTO<BoardListAllDTO> listWithAll(PageRequestDTO pageRequestDTO) {
+        return null;
     }
 
 

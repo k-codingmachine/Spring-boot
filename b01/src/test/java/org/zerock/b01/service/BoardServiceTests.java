@@ -4,9 +4,13 @@ import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 import org.zerock.b01.dto.BoardDTO;
 import org.zerock.b01.dto.PageRequestDTO;
 import org.zerock.b01.dto.PageResponseDTO;
+
+import java.util.Arrays;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -37,14 +41,20 @@ class BoardServiceTests {
     }
 
     @Test
-    public void testModify(){
-        BoardDTO boardDTO =  BoardDTO.builder()
-                .bno(102L)
-                .title("수정 제목")
-                .content("수정 내용")
+    public void testModify() {
+
+        //변경에 필요한 데이터
+        BoardDTO boardDTO = BoardDTO.builder()
+                .bno(1L)
+                .title("Updated....101")
+                .content("Updated content 101...")
                 .build();
 
+        //첨부파일을 하나 추가
+        boardDTO.setFileNames(Arrays.asList(UUID.randomUUID()+"_fff.jpg"));
+
         boardService.midify(boardDTO);
+
     }
 
     @Test
@@ -68,9 +78,39 @@ class BoardServiceTests {
         log.info(pageResponseDTO);
     }
 
+    @Test
+    public void testRegisterWithImages(){
+
+        BoardDTO boardDTO =  BoardDTO.builder()
+                .title("File.....Sample Title")
+                .content("Sample Content...")
+                .writer("user00")
+                .build();
+
+        boardDTO.setFileNames(
+                Arrays.asList(
+                        UUID.randomUUID() + "_aaa.jpg",
+                        UUID.randomUUID() + "_bbb.jpg",
+                        UUID.randomUUID() + "_ccc.jpg"
+                )
+        );
+
+        Long bno = boardService.register(boardDTO);
+        log.info("bno : " + bno);
+
+    }
 
 
+    @Test
+    public void testReadAll(){
+        BoardDTO boardDTO = boardService.readOne(101L);
 
+        log.info(boardDTO);
+
+        boardDTO.getFileNames().forEach(fileName->
+                log.info(fileName)
+        );
+    }
 
 
 

@@ -11,7 +11,7 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-//@ToString(exclude = "board")
+@ToString(exclude = "board")
 public class Reply extends BaseEntity{
 
     @Id

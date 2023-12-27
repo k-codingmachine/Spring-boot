@@ -45,11 +45,12 @@ public class UpDownController {
             uploadFileDTO.getFiles().forEach(multipartFile -> {
 
                 String originalName = multipartFile.getOriginalFilename();
+
                 log.info(originalName);
 
                 String uuid = UUID.randomUUID().toString();
 
-                Path savePath = Paths.get(uploadPath, uuid+"_"+originalName);
+                Path savePath = Paths.get(uploadPath, uuid + "_" + originalName);
 
                 boolean image = false;
 
@@ -63,7 +64,8 @@ public class UpDownController {
 
                         image = true;
 
-                        File thumbFile = new File(uploadPath, "s_" + uuid+"_"+originalName);
+                        File thumbFile = new File(uploadPath, "s_" + uuid + "_" + originalName);
+
                         Thumbnailator.createThumbnail(savePath.toFile(), thumbFile, 200,200);
                     }
 
@@ -71,6 +73,9 @@ public class UpDownController {
                     e.printStackTrace();
                 }
 
+                log.info("------------------------------------------------------------originalName");
+                log.info(originalName);
+                log.info("------------------------------------------------------------originalName");
                 list.add(
                         UploadResultDTO.builder()
                                 .uuid(uuid)

@@ -1,10 +1,13 @@
 package org.zerock.b01.service;
 
+
 import org.zerock.b01.domain.Board;
 import org.zerock.b01.dto.*;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+
 
 public interface BoardService {
 
@@ -34,8 +37,21 @@ public interface BoardService {
 
         //uuid_originalFileName
         if(boardDTO.getFileNames() != null){
-            boardDTO.getFileNames().forEach(fileName ->{
-                String[] arr = fileName.split("_");
+            boardDTO.getFileNames().forEach(fileName -> {
+
+                String[] arr = fileName.split("_" , 2);
+                //0fcf646a-95b0-4fea-82f1-a7ed32ede70c_event06_02.PNG
+                //이런 문자열이 기입이 되면 첫번째_에서만 문자열을 분리함.
+
+
+//                System.out.println("---------------------------------dtoToEntity-");
+//
+//                Arrays.stream(arr).forEach(list-> System.out.println(list));
+//
+//                System.out.println("fileName : " + fileName);
+//                System.out.println("arr[0] : " + arr[0]);
+//                System.out.println("arr[1] : " +arr[1]);
+//                System.out.println("----------------------------------dtoToEntity");
                 board.addImage(arr[0], arr[1]);  //arr[0] : uuid, arr[1] : original filename
             });
         }

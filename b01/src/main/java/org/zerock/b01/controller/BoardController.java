@@ -15,10 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.zerock.b01.dto.BoardDTO;
-import org.zerock.b01.dto.BoardListReplyCountDTO;
-import org.zerock.b01.dto.PageRequestDTO;
-import org.zerock.b01.dto.PageResponseDTO;
+import org.zerock.b01.dto.*;
 import org.zerock.b01.service.BoardService;
 
 import javax.naming.Binding;
@@ -35,12 +32,10 @@ public class BoardController {
     @GetMapping("/list")
     public void list(PageRequestDTO pageRequestDTO, Model model){
 
-//        PageResponseDTO<BoardDTO> responseDTO = boardService.list(pageRequestDTO);
+        PageResponseDTO<BoardListAllDTO> responseDTO
+                = boardService.listWithAll(pageRequestDTO);
 
-        PageResponseDTO<BoardListReplyCountDTO> responseDTO
-                = boardService.listWithReplyCount(pageRequestDTO);
-
-        log.info("---------------------------------------");
+        log.info("---------------------------------------list");
         log.info(responseDTO);
         model.addAttribute("responseDTO", responseDTO);
 
@@ -76,6 +71,12 @@ public class BoardController {
 
     @GetMapping({"/read", "/modify"})
     public void read(@RequestParam("bno") Long bno, PageRequestDTO pageRequestDTO, Model model){
+
+        log.info("--------------------------------------------read");
+        log.info(bno);
+        log.info(pageRequestDTO);
+        log.info("--------------------------------------------read");
+
         BoardDTO boardDTO = boardService.readOne(bno);
 
         log.info(boardDTO);

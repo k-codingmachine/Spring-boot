@@ -40,7 +40,7 @@
 
             <div class="my-4">
               <div class="float-end">
-                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="submit" class="btn btn-primary submitBtn">Submit</button>
                 <button type="reset" class="btn btn-secondary">Reset</button>
               </div>
             </div>
@@ -128,8 +128,8 @@
     console.log(formObj);
 
     uploadToServer(formObj).then(result => {
+      console.log("---------------uploadToServer---------------------")
       console.log(result)
-      //console.log(result)
       for (const uploadResult of result) {
         console.log(uploadResult);
         showUploadFile(uploadResult)
@@ -151,12 +151,53 @@
                 <button class="btn-sm btn-danger" onclick="javascript:removeFile('${uuid}', '${fileName}', this)" >X</button>
             </div>
             <div class="card-body">
-                 <img src="/view/${link}" data-src="${uuid+"_"+fileName}" >
+                 <img src="/view/${link}" data-src="${uuid + "_" + fileName}" >
             </div>
         </div><!-- card -->`
 
     uploadResult.innerHTML += str
   }
+
+
+  //첨부 파일 삭제
+  function removeFile(uuid, fileName, obj){
+
+    console.log("obj................")
+    console.log(obj)
+
+    const targetDiv = obj.closest(".card")
+    removeFileToServer(uuid, fileName).then(data => {
+      console.log("data-----------------")
+      console.log(data)
+      targetDiv.remove()
+    })
+  }
+
+  //게시글 등록 처리
+  document.querySelector(".submitBtn").addEventListener("click", function (e){
+    e.preventDefault()
+    e.stopPropagation()
+
+    const target = document.querySelector(".uploadHidden")
+
+    const uploadFiles = uploadResult.querySelectorAll("img")
+
+    let str=""
+
+    for(let i=0; i<uploadFiles.length; i++){
+      const  uploadFile = uploadFiles[i]
+
+      const imgLink = uploadFile.getAttribute("data-src")
+
+
+      str += `<input type='hidden' name='fileNames' value="${imgLink}">`
+    }
+
+    target.innerHTML = str;
+
+    document.querySelector("form").submit();
+  },false)
+
 
 
 </script>

@@ -220,7 +220,6 @@ public class BoardSearchImpl extends QuerydslRepositorySupport implements BoardS
          }).collect(Collectors.toList());
 
 
-
         long totalCount = boardJPQLQuery.fetchCount();
         return new PageImpl<>(dtoList, pageable, totalCount);
     }

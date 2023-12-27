@@ -40,7 +40,7 @@ public class BoardServiceImpl implements  BoardService{
     @Override
     public BoardDTO readOne(Long bno) {
 
-//        Board board = boardReposotory.findById(bno).orElseThrow();
+        //board_image까지 조인 처리되는 findByWithImages()를 이용
 
         Board board = boardReposotory.findByIdWithImages(bno).orElseThrow();
 

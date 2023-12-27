@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.repository.query.Param;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -43,8 +44,9 @@ public class BoardController {
 
     @Operation(summary = "register" ,method = "GetMapping")
     @GetMapping("/register")
+    @PreAuthorize("hasRole('USER')")
     public void registerGET(){
-
+        log.info("--------------------------------registerGET");
     }
 
     @PostMapping("/register")

@@ -38,6 +38,12 @@ public class CustomSecurityConfig {
             config.loginPage("/member/login");
         });
 
+        http.oauth2Login(config -> {
+            config.loginPage("/member/login");
+        });
+
+
+
         http.csrf(config -> config.disable());
 
 
